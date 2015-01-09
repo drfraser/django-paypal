@@ -15,6 +15,8 @@ from django.conf import settings
 # PayPal dates have been spotted in the wild with these formats, beware!
 PAYPAL_DATE_FORMAT = ("%H:%M:%S %b. %d, %Y PST",
                       "%H:%M:%S %b. %d, %Y PDT",
+                      "%H:%M:%S %d %b %Y PST",    # IPN Tester
+                      "%H:%M:%S %d %b %Y PDT",    # formats
                       "%H:%M:%S %b %d, %Y PST",
                       "%H:%M:%S %b %d, %Y PDT",)
 
@@ -240,3 +242,7 @@ class PayPalStandardBaseForm(forms.ModelForm):
     next_payment_date = forms.DateTimeField(required=False, input_formats=PAYPAL_DATE_FORMAT)
     subscr_date = forms.DateTimeField(required=False, input_formats=PAYPAL_DATE_FORMAT)
     subscr_effective = forms.DateTimeField(required=False, input_formats=PAYPAL_DATE_FORMAT)
+    retry_at = forms.DateTimeField(required=False, input_formats=PAYPAL_DATE_FORMAT)
+    case_creation_date = forms.DateTimeField(required=False, input_formats=PAYPAL_DATE_FORMAT)
+    auction_closing_date = forms.DateTimeField(required=False, input_formats=PAYPAL_DATE_FORMAT)
+
