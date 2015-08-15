@@ -49,13 +49,17 @@ To use PDT:
 
    .. code-block:: python
 
+       from django.conf.urls import url, include
        ...
-       urlpatterns = patterns('',
-           (r'^paypal/pdt/', include('paypal.standard.pdt.urls')),
+       urlpatterns = [
+           url(r'^paypal/pdt/', include('paypal.standard.pdt.urls')),
            ...
-       )
+       ]
 
    Then specify the ``return_url`` to use this URL.
+
+   You will also need to have a ``base.html`` template with a block
+   ``content``. This template is inherited by the PDT view template.
 
    More than likely, however, you will want to write a custom view that
    calls ``paypal.standard.pdt.views.process_pdt``. This function returns

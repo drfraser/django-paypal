@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from __future__ import unicode_literals
+
+from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from paypal.standard.pdt.models import PayPalPDT
 from paypal.standard.pdt.forms import PayPalPDTForm
@@ -16,7 +17,7 @@ def pdt(request, item_check_callable=None, template="pdt/pdt.html", context=None
 
     context = context or {}
     context.update({"failed": failed, "pdt_obj": pdt_obj})
-    return render_to_response(template, context, RequestContext(request))
+    return render(request, template, context)
 
 
 def process_pdt(request, item_check_callable=None):
@@ -63,7 +64,6 @@ def process_pdt(request, item_check_callable=None):
                 # The PDT object gets saved during verify
                 pdt_obj.verify(item_check_callable)
     else:
-        pass # we ignore any PDT requests that don't have a transaction id
+        pass  # we ignore any PDT requests that don't have a transaction id
 
     return (pdt_obj, failed)
-

@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from decimal import Decimal
-import os
 import warnings
 
 import mock
@@ -16,6 +17,7 @@ from paypal.pro.exceptions import PayPalFailure
 from paypal.pro.views import PayPalPro
 from paypal.pro.signals import payment_was_successful
 
+from .settings import TEMPLATES, TEMPLATE_DIRS
 
 RF = RequestFactory()
 REQUEST = RF.get("/pay/", REMOTE_ADDR="127.0.0.1:8000")
@@ -45,8 +47,6 @@ class CreditCardFieldTest(TestCase):
         self.assertEqual(CreditCardField().clean('4797-5034-2987-9309'), '4797503429879309')
 
 
-
-
 def ppp_wrapper(request, handler=None):
     item = {"paymentrequest_0_amt": "10.00",
             "inv": "inventory",
@@ -55,7 +55,7 @@ def ppp_wrapper(request, handler=None):
             "returnurl": "http://foo.com/return"}
 
     if handler is None:
-        handler = lambda nvp: nvp # NOP
+        handler = lambda nvp: nvp  # NOP
     ppp = PayPalPro(
         item=item,                            # what you're selling
         payment_template="payment.html",      # template name for payment
@@ -67,7 +67,8 @@ def ppp_wrapper(request, handler=None):
     return ppp(request)
 
 
-@override_settings(TEMPLATE_DIRS=[os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')])
+@override_settings(TEMPLATE_DIRS=TEMPLATE_DIRS,
+                   TEMPLATES=TEMPLATES)
 class PayPalProTest(TestCase):
 
     def test_get(self):
@@ -93,6 +94,7 @@ class PayPalProTest(TestCase):
         doExpressCheckoutPayment.return_value = nvp
 
         received = []
+
         def handler(nvp):
             received.append(nvp)
 
@@ -103,6 +105,7 @@ class PayPalProTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], '/success/')
         self.assertEqual(len(received), 1)
+
 
 class PayPalWPPTest(TestCase):
     def setUp(self):
@@ -309,7 +312,7 @@ class PayPalWPPTest(TestCase):
                                         'amt': amount})
 
 
-### DoExpressCheckoutPayment
+# -- DoExpressCheckoutPayment
 # PayPal Request:
 # {'amt': '10.00',
 #  'cancelurl': u'http://xxx.xxx.xxx.xxx/deploy/480/upgrade/?upgrade=cname',

@@ -9,6 +9,47 @@ detailed information about all changes.
 
 Below is a summary:
 
+Version 0.2.5
+-------------
+
+* Fixed some ``PayPalIPN`` DateTimeFields that were not being handled like the rest. Thanks
+  thiagogds for the patch.
+
+* Fixed ``PayPalNVP.timestamp`` field so that it receives timezone-aware datetimes
+  if you have ``USE_TZ = True``
+
+
+Version 0.2.4
+-------------
+
+* Fixed timezone parsing of PalPal data so that ``PayPalIPN.payment_date`` and others
+  are handled correctly (if you have ``USE_TZ = True``).
+
+  This does not include a migration to fix old data - see the release notes if
+  you need that.
+
+* Work-arounds for bugs in the IPN Simulator
+* Other small fixes
+
+
+Version 0.2.3
+-------------
+
+* Fixed various deprecation warnings when running under Django 1.8
+
+
+Version 0.2.2
+-------------
+
+* Added 'commit' kwarg to ``express_endpoint_for_token()``
+
+Version 0.2.1
+-------------
+
+* Added ``PayPalNVP.response_dict`` attribute.
+* Added ``PayPalFailure.nvp`` attribute to get full info
+* Switched to using ``requests`` library for HTTP calls.
+
 Version 0.2
 -----------
 

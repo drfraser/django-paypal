@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
+
 import sys
 
 import django
@@ -34,6 +36,26 @@ settings.configure(
         }
     },
     MIDDLEWARE_CLASSES=[],
+    TEMPLATES=[  # Django 1.8 and later
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+            ],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.contrib.auth.context_processors.auth',
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.i18n',
+                    'django.template.context_processors.media',
+                    'django.template.context_processors.static',
+                    'django.template.context_processors.tz',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ],
+    USE_TZ=True,
 )
 
 
@@ -42,7 +64,7 @@ argv = [sys.argv[0], "test"]
 
 if len(sys.argv) == 1:
     # Nothing following 'runtests.py':
-    if django.VERSION < (1,6):
+    if django.VERSION < (1, 6):
         argv.extend(["pro", "ipn", "pdt"])
     else:
         argv.extend(["paypal.pro.tests", "paypal.standard.ipn.tests", "paypal.standard.pdt.tests"])

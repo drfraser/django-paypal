@@ -1,6 +1,14 @@
 Using PayPal Payments Pro (WPP)
 ===============================
 
+
+.. toctree::
+   :maxdepth: 2
+
+   index
+   detail
+
+
 PayPal Payments Pro (or "Website Payments Pro") is a more awesome version of
 PayPal that lets you accept payments on your site. This is now documented by
 PayPal as a `Classic API
@@ -93,11 +101,16 @@ to use through the provided ``PayPalPro`` class.
 
    .. code-block:: python
 
-       urlpatterns = ('',
+       from django.conf.urls import url, include
+
+       from myproject import views
+
+
+       urlpatterns = [
            ...
-           (r'^payment-url/$', 'myproject.views.buy_my_item')
-           (r'^some/obscure/name/', include('paypal.standard.ipn.urls')),
-       )
+           url(r'^payment-url/$', views.buy_my_item),
+           url(r'^some/obscure/name/', include('paypal.standard.ipn.urls')),
+       ]
 
 7. Profit.
 

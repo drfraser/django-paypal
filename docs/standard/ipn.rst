@@ -52,7 +52,7 @@ Using PayPal Standard IPN
            # Create the instance.
            form = PayPalPaymentsForm(initial=paypal_dict)
            context = {"form": form}
-           return render_to_response("payment.html", context)
+           return render(request, "payment.html", context)
 
    For a full list of variables that can be used in ``paypal_dict``, see
    `PayPal HTML variables documentation <https://developer.paypal.com/webapps/developer/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/>`_.
@@ -75,9 +75,11 @@ Using PayPal Standard IPN
 
    .. code-block:: python
 
-       urlpatterns = patterns('',
-           (r'^something/paypal/', include('paypal.standard.ipn.urls')),
-       )
+       from django.conf.urls import url, include
+
+       urlpatterns = [
+           url(r'^something/paypal/', include('paypal.standard.ipn.urls')),
+       ]
 
 5. Whenever an IPN is processed a signal will be sent with the result of the
    transaction.
@@ -142,6 +144,32 @@ Using PayPal Standard IPN
    For ``return_url``, you need to cope with the possibility that the IPN has not
    yet been received and handled by the IPN listener you implemented (which can
    happen rarely), or that there was some kind of error with the IPN.
+
+
+Testing
+-------
+
+If you are attempting to test this in development, using the PayPal sandbox, and
+your machine is behind a firewall/router and therefore is not publicly
+accessible on the internet (this will be the case for most developer machines),
+PayPal will not be able to post back to your view. You will need to use a tool
+like https://ngrok.com/ to make your machine publicly accessible, and ensure
+that you are sending PayPal your public URL, not ``localhost``.
+
+Simulator testing
+-----------------
+
+The PayPal IPN simulator at https://developer.paypal.com/developer/ipnSimulator
+has some unfortunate bugs:
+
+* it doesn't send the ``encoding`` parameter. django-paypal deals with this
+  using a guess.
+
+* the default 'payment_date' that is created for you is in the wrong format. You
+  need to change it to something like::
+
+    23:04:06 Feb 02, 2015 PDT
+
 
 See also
 --------
